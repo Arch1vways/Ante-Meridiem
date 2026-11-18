@@ -2,7 +2,7 @@
 
 # Ante Meridiem
 
-An LSPosed module for OriginOS 6 that brings custom lock screen clock fonts, an optional analog dial mode, digital/analog clock size scaling with automatic widget adaptation, and date customization (hide or match clock font).
+An LSPosed module for OriginOS that brings custom lock screen clock fonts, custom styles, clock size scaling.
 
 ## Build
 
