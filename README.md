@@ -16,4 +16,4 @@ make
 ./gradlew :app:assembleDebug
 ```
 
-The built APK is located at `/dist/*.apk`.
+The built APK is located at `dist/*.apk`.
