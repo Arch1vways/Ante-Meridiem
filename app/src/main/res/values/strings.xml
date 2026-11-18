@@ -1,0 +1,51 @@
+<resources>
+    <!-- English (default). Russian: values-ru/strings.xml -->
+    <string name="app_name">Ante Meridiem</string>
+    <string name="xposed_description">(OriginOS Only) Expands the standart font library on the lock screen</string>
+
+    <string name="sample" translatable="false">10:08</string>
+
+    <string name="status_ok">Module is active</string>
+    <string name="status_unknown">Module is not active</string>
+
+
+    <string name="add_font">Add font</string>
+    <string name="adding_font">Adding the font…</string>
+    <string name="add_done">Added: %1$s</string>
+    <string name="err_too_big">The file is larger than %1$d MB</string>
+    <string name="err_woff">WOFF fonts are not supported, use TTF or OTF</string>
+    <string name="err_not_font">This is not a TTF / OTF font Android can read</string>
+    <string name="err_no_digits">The font has no digits</string>
+    <string name="err_duplicate">Already in the list</string>
+    <string name="err_io">Could not read the file</string>
+    <string name="err_no_picker">No file picker found</string>
+
+    <string name="cat_apple" translatable="false">iOS</string>
+    <string name="cat_samsung" translatable="false">OneUI</string>
+    <string name="cat_google" translatable="false">Google Pixel</string>
+    <string name="cat_xiaomi" translatable="false">HyperOS</string>
+    <string name="cat_oppo" translatable="false">ColorOS</string>
+    <string name="cat_huawei" translatable="false">HarmonyOS</string>
+    <string name="cat_nothing" translatable="false">NothingOS</string>
+    <string name="cat_motorola" translatable="false">Hello UI</string>
+    <string name="cat_other">Other</string>
+    <string name="cat_custom">Your fonts</string>
+
+    <string name="show_category">Show all of %1$s</string>
+    <string name="show_font">Show %1$s in the editor</string>
+
+    <string name="more">More</string>
+    <string name="rename">Rename</string>
+    <string name="delete">Delete</string>
+    <string name="delete_confirm">Delete %1$s?</string>
+
+    <string name="layout_title">Layout</string>
+    <string name="layout_digital">Digital</string>
+    <string name="layout_analog">Analog</string>
+    <string name="analog_hands">Clock hands</string>
+    <string name="date_title">Date</string>
+    <string name="analog_size">Size</string>
+    <string name="clock_size_value">%1$d%%</string>
+    <string name="date_hide">Hide date</string>
+    <string name="date_font">Clock font for the date</string>
+</resources>

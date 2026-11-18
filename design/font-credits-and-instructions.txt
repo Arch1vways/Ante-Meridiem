@@ -1,0 +1,13 @@
+credits_text:
+Категория Samsung: шрифты из Samsung AODService_v80 (права принадлежат авторам).
+Шрифты Google, Xiaomi, OPPO, Huawei, Nothing, Motorola и прочие: OneUI-Lockscreen-Font-EXT от HeheJuice (github.com/HeheJuice/OneUI-Lockscreen-Font-EXT).
+OPPO Big Clock: OPPO · HarmonyOS Sans: Huawei · Xiaomi Neu Rounded, Mi Serif: Xiaomi · NType, Ndot, NothingOS Thin: Nothing · Moto Milky Stacked: Motorola · Pixel Inflate: Google · варианты OPPO Big Clock, NothingOS Thin доработаны HeheJuice.
+Bodoni Moda: Owen Earl · DM Serif Display: Colophon Foundry · Gravitas One: Riccardo De Franceschi · Chamberi Super Display: Iñigo Jerez, Francisco Torres · Creato Display: Anugrah Pasau · Poppins: Indian Type Foundry, Jonny Pinhorn, Ninad Kale · Comfortaa: Johan Aakerlund · Badeen Display: Hani Alasadi · CookieRun: Devsisters · Monoton: Vernon Adams · Riviera: Johann Darcel.
+Geist, Geist Mono: Vercel, basement.studio (SIL OFL 1.1, github.com/vercel/geist-font).
+Шрифты iOS 26 (SF, New York, ADT Slab): Apple.
+Некоторые шрифты урезаны до латинских цифр и знаков. Права принадлежат авторам.
+
+how_text:
+Сведите пальцы на экране блокировки (или Темы → Экран блокировки → Изменить), нажмите на часы → Шрифт. Шрифты модуля идут после шрифтов vivo; у вариативных шрифтов работает и ползунок толщины.
+
+На Always-On Display остаётся стандартный шрифт vivo.

@@ -1,0 +1,43 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'dev.antemeridiem'
+    compileSdk 35
+    buildToolsVersion '35.0.0'
+    defaultConfig {
+        applicationId 'arch1.dev.antemeridiem'
+        minSdk 31
+        targetSdk 35
+        versionCode 31
+        versionName '1.1'
+    }
+    buildFeatures { buildConfig true }
+    // Fonts are stored uncompressed: the hooks copy them out of the APK, the app maps them directly.
+    androidResources { noCompress 'ttf', 'otf' }
+    // Optional stable debug key, so new builds install over old ones. The key and its password live outside
+    // the project (path from env LOCKFONTS_SIGNING or the Gradle property lockfonts.signing) and are never part
+    // of the sources. Without them the standard Android debug key is used.
+    def signingPath = System.getenv('LOCKFONTS_SIGNING') ?: project.findProperty('lockfonts.signing')
+    def signingFile = signingPath ? file(signingPath) : null
+    if (signingFile != null && signingFile.isFile()) {
+        def sp = new Properties()
+        signingFile.withInputStream { sp.load(it) }
+        signingConfigs {
+            stableDebug {
+                storeFile file(sp['storeFile'])
+                storePassword sp['storePassword']
+                keyAlias sp['keyAlias']
+                keyPassword sp['keyPassword']
+            }
+        }
+        buildTypes { debug { signingConfig signingConfigs.stableDebug } }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    testOptions { unitTests { includeAndroidResources = true } }
+}
+dependencies {
+    compileOnly files('libs/libxposed-api-102.0.0.jar')
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.14.1'
+    testImplementation files('libs/libxposed-api-102.0.0.jar')
+}

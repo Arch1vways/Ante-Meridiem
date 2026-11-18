@@ -1,0 +1,35 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- The provider answers only these packages, so it must be able to see them (Android 11+ package visibility). -->
+    <queries>
+        <package android:name="com.bbk.theme" />
+        <package android:name="com.android.systemui" />
+        <package android:name="com.vivo.systemuiplugin" />
+    </queries>
+
+    <application
+        android:description="@string/xposed_description"
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:theme="@style/AppTheme"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules">
+
+        <activity android:name=".MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Fonts for the hooked processes. No permission can be required from Themes / System UI, so the provider
+             checks the calling package itself (see FontsProvider). Works before the first unlock. -->
+        <provider
+            android:name=".FontsProvider"
+            android:authorities="${applicationId}.fonts"
+            android:exported="true"
+            android:directBootAware="true"
+            tools:ignore="ExportedContentProvider" />
+    </application>
+</manifest>

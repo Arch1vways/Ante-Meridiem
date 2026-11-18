@@ -1,0 +1,40 @@
+<resources>
+    <string name="app_name">Ante Meridiem</string>
+    <string name="xposed_description">(OriginOS Only) Expands the standart font library on the lock screen</string>
+
+    <string name="status_ok">Модуль активен</string>
+    <string name="status_unknown">Модуль не активен</string>
+
+
+    <string name="add_font">Добавить шрифт</string>
+    <string name="adding_font">Добавляю шрифт…</string>
+    <string name="add_done">Добавлен: %1$s</string>
+    <string name="err_too_big">Файл больше %1$d МБ</string>
+    <string name="err_woff">WOFF не поддерживается, нужен TTF или OTF</string>
+    <string name="err_not_font">Это не шрифт TTF / OTF, который может прочитать Android</string>
+    <string name="err_no_digits">В шрифте нет цифр</string>
+    <string name="err_duplicate">Уже есть в списке</string>
+    <string name="err_io">Не удалось прочитать файл</string>
+    <string name="err_no_picker">Не найден выбор файлов</string>
+
+    <string name="cat_other">Прочие</string>
+    <string name="cat_custom">Свои шрифты</string>
+
+    <string name="show_category">Показывать все: %1$s</string>
+    <string name="show_font">Показывать %1$s в редакторе</string>
+
+    <string name="more">Ещё</string>
+    <string name="rename">Переименовать</string>
+    <string name="delete">Удалить</string>
+    <string name="delete_confirm">Удалить %1$s?</string>
+
+    <string name="layout_title">Циферблат</string>
+    <string name="layout_digital">Цифровой</string>
+    <string name="layout_analog">Аналоговый</string>
+    <string name="analog_hands">Стрелки</string>
+    <string name="date_title">Дата</string>
+    <string name="analog_size">Размер</string>
+    <string name="clock_size_value">%1$d%%</string>
+    <string name="date_hide">Скрыть дату</string>
+    <string name="date_font">Шрифт часов для даты</string>
+</resources>
