@@ -44,7 +44,7 @@ final class ClockLayout {
             KEY_DIGITAL_SCALE = "digital_scale";
     static final int MIN_DIGITAL_SCALE = 50, MAX_DIGITAL_SCALE = 150, DEFAULT_DIGITAL_SCALE = 100;
     private static final String VIVO = "com.vivo.";
-    private static final float WIDGET_GAP_DP = 8f, ANALOG_WIDGET_GAP_DP = 20f,
+    private static final float WIDGET_GAP_DP = 8f, ANALOG_WIDGET_GAP_DP = 5f,
             PUSH_TOLERANCE_DP = 4f, PUSH_MAX_TOP = 0.8f, PUSH_MAX_BOTTOM = 0.92f;
     static volatile boolean dateHidden, dateFont;
     static volatile int digitalScale = DEFAULT_DIGITAL_SCALE;
@@ -474,7 +474,9 @@ final class ClockLayout {
         boolean analogNow = AnalogClock.analog;
         if (analogNow != lastAnalogMode) {
             lastAnalogMode = analogNow;
-            releaseFramePushed(frame);
+            releaseAllPushed();
+            frame.widgets.clear();
+            frame.widgetsDirty = true;
             for (WeakReference<TextView> ref : frame.clocks) {
                 TextView clock = ref.get();
                 if (clock != null) restoreClockSize(clock);
@@ -568,7 +570,13 @@ final class ClockLayout {
                 break;
             }
         }
-        if (firstPrimary == null) return;
+        if (firstPrimary == null || firstPrimary.isLayoutRequested()) return;
+        for (WeakReference<View> ref : frame.widgets) {
+            View w = ref.get();
+            if (w != null && w.isAttachedToWindow() && w.getVisibility() == View.VISIBLE && w.isLayoutRequested()) {
+                return;
+            }
+        }
         View host = keyguardHost(firstPrimary, root);
         RectF clockBounds = null;
         RectF tmp = new RectF();
@@ -594,6 +602,7 @@ final class ClockLayout {
         if (clockBounds == null || clockBounds.height() <= 0f) return;
         float density = host.getResources().getDisplayMetrics().density;
         if (frame.widgetsDirty || frame.widgets.isEmpty()) {
+            if (host.isLayoutRequested()) return;
             frame.widgetsDirty = false;
             Set<View> skip = identitySet(), holders = identitySet();
             for (WeakReference<TextView> ref : frame.clocks) {
@@ -618,6 +627,14 @@ final class ClockLayout {
                 if (w != null && !found.contains(w)) stale.add(w);
             }
             for (View w : stale) unpush(w, PUSHED.remove(w));
+            for (java.util.Iterator<Map.Entry<View, int[]>> it = PUSHED.entrySet().iterator(); it.hasNext(); ) {
+                Map.Entry<View, int[]> e = it.next();
+                View w = e.getKey();
+                if (w != null && !found.contains(w) && isDescendant(host, w)) {
+                    unpush(w, e.getValue());
+                    it.remove();
+                }
+            }
             frame.widgets.clear();
             for (View w : found) {
                 frame.widgets.add(new WeakReference<>(w));
@@ -667,7 +684,8 @@ final class ClockLayout {
             if (tmp.width() <= 0f || tmp.height() <= 0f) return;
             if (tmp.right <= clock.left || tmp.left >= clock.right || tmp.bottom <= clock.top) return;
             float h = root.getHeight();
-            if (tmp.top >= clock.top + clock.height() * 0.35f - PUSH_TOLERANCE_DP * density) {
+            float minTop = clock.top + Math.min(clock.height() * 0.35f, 72f * density) - PUSH_TOLERANCE_DP * density;
+            if (tmp.top >= minTop) {
                 if (tmp.top >= PUSH_MAX_TOP * h) return;
                 if (tmp.bottom <= PUSH_MAX_BOTTOM * h) {
                     out.add(v);
@@ -764,6 +782,13 @@ final class ClockLayout {
             lp.topMargin = p[0];
             v.setLayoutParams(lp);
         }
+    }
+
+    private static boolean isDescendant(View root, View v) {
+        for (View cur = v; cur != null; cur = parent(cur)) {
+            if (cur == root) return true;
+        }
+        return false;
     }
 
     private static void releaseFramePushed(Frame frame) {
