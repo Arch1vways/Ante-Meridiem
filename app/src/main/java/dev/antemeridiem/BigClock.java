@@ -101,7 +101,10 @@ final class BigClock {
         if (existing instanceof Spanned) {
             Spanned source = (Spanned) existing;
             for (Object span : source.getSpans(0, source.length(), Object.class)) {
-                if (span instanceof DigitSpan || span instanceof AnalogClock.OwnSpan) { changed = true; continue; }
+                if (span instanceof DigitSpan || span instanceof ColonSpan || span instanceof AnalogClock.OwnSpan) {
+                    changed = true;
+                    continue;
+                }
                 // Do not copy TextView's internal change watchers to a detached buffer.
                 if (span instanceof NoCopySpan || span instanceof SpanWatcher) continue;
                 text.setSpan(span, source.getSpanStart(span), source.getSpanEnd(span), source.getSpanFlags(span));
@@ -109,9 +112,13 @@ final class BigClock {
         }
         if (selected && bitmaps != null) {
             for (int i = 0; i < text.length(); i++) {
-                int n = text.charAt(i) - '0';
+                char ch = text.charAt(i);
+                int n = ch - '0';
                 if (n >= 0 && n <= 9) {
                     text.setSpan(new DigitSpan(bitmaps[n]), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    changed = true;
+                } else if (ch == ':' || ch == '\uFF1A') {
+                    text.setSpan(new ColonSpan(), i, i + 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     changed = true;
                 }
             }
@@ -165,16 +172,37 @@ final class BigClock {
         private final Bitmap bitmap;
         DigitSpan(Bitmap bitmap) { this.bitmap = bitmap; }
         @Override public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
-            return Math.round(paint.measureText(text, start, end));
+            float height = paint.getTextSize() * .72f;
+            return Math.round(height * bitmap.getWidth() / bitmap.getHeight());
         }
         @Override public void draw(Canvas canvas, CharSequence text, int start, int end, float x,
                 int top, int y, int bottom, Paint paint) {
-            float width = paint.measureText(text, start, end);
             float height = paint.getTextSize() * .72f;
+            float width = height * bitmap.getWidth() / bitmap.getHeight();
             Paint bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
             bitmapPaint.setColorFilter(new PorterDuffColorFilter(paint.getColor() | 0xff000000, PorterDuff.Mode.SRC_IN));
             bitmapPaint.setAlpha(paint.getAlpha());
             canvas.drawBitmap(bitmap, null, new RectF(x, y - height, x + width, y), bitmapPaint);
+        }
+    }
+
+    private static final class ColonSpan extends ReplacementSpan {
+        @Override public int getSize(Paint paint, CharSequence text, int start, int end, Paint.FontMetricsInt fm) {
+            float height = paint.getTextSize() * .72f;
+            return Math.round(height * .36f);
+        }
+        @Override public void draw(Canvas canvas, CharSequence text, int start, int end, float x,
+                int top, int y, int bottom, Paint paint) {
+            float height = paint.getTextSize() * .72f;
+            float width = height * .36f;
+            float cx = x + width / 2f;
+            float r = height * .085f;
+            Paint dotPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            dotPaint.setColor(paint.getColor());
+            dotPaint.setAlpha(paint.getAlpha());
+            dotPaint.setStyle(Paint.Style.FILL);
+            canvas.drawCircle(cx, y - height * .66f, r, dotPaint);
+            canvas.drawCircle(cx, y - height * .34f, r, dotPaint);
         }
     }
 }
