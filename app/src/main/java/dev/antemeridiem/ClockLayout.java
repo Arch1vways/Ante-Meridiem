@@ -529,10 +529,66 @@ final class ClockLayout {
             state.basePx = cur;
         }
         float want = Math.max(1f, state.basePx * (digitalScale / 100f));
+        want = fitToWidth(clock, raw, cur, want);
         if (Math.abs(cur - want) > 0.5f) {
             clock.setTextSize(TypedValue.COMPLEX_UNIT_PX, want);
         }
         state.appliedPx = clock.getTextSize();
+    }
+
+    private static float fitToWidth(TextView clock, CharSequence raw, float curSize, float wantSize) {
+        if (raw == null || raw.length() == 0 || curSize <= 0f) return wantSize;
+        android.text.TextPaint paint = clock.getPaint();
+        if (paint == null) return wantSize;
+        char widest = widestDigit(paint);
+        StringBuilder sb = new StringBuilder(raw.length());
+        for (int i = 0; i < raw.length(); i++) {
+            char ch = raw.charAt(i);
+            if (ch >= '0' && ch <= '9') sb.append(widest);
+            else sb.append(ch);
+        }
+        float measuredAtCur = paint.measureText(sb.toString());
+        if (measuredAtCur <= 0f) return wantSize;
+        float measuredAtWant = measuredAtCur * (wantSize / curSize);
+        float availW = availableWidth(clock);
+        if (measuredAtWant > availW) {
+            return Math.max(1f, wantSize * (availW / measuredAtWant));
+        }
+        return wantSize;
+    }
+
+    private static char widestDigit(android.text.TextPaint paint) {
+        char best = '8';
+        float max = -1f;
+        for (char d = '0'; d <= '9'; d++) {
+            float w = paint.measureText(String.valueOf(d));
+            if (w > max) {
+                max = w;
+                best = d;
+            }
+        }
+        return best;
+    }
+
+    private static float availableWidth(TextView clock) {
+        int screenW = clock.getResources().getDisplayMetrics().widthPixels;
+        float maxW = screenW * 0.94f;
+        ViewGroup.LayoutParams lp = clock.getLayoutParams();
+        if (lp != null && lp.width > 0 && clock.getWidth() > 0) {
+            float w = clock.getWidth() - clock.getPaddingLeft() - clock.getPaddingRight();
+            if (w > 0f) maxW = Math.min(maxW, w);
+        }
+        ViewParent p = clock.getParent();
+        while (p instanceof View) {
+            View pv = (View) p;
+            int pw = pv.getWidth() - pv.getPaddingLeft() - pv.getPaddingRight();
+            if (pw > 0) {
+                maxW = Math.min(maxW, pw * 0.96f);
+                break;
+            }
+            p = pv.getParent();
+        }
+        return Math.max(1f, maxW);
     }
 
     private static void restoreClockSize(TextView clock) {

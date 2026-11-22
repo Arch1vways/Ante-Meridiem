@@ -66,8 +66,13 @@ final class FontNormalizer {
         p.setTextSize(SIZE);
         Rect r = new Rect();
         p.getTextBounds(chars, 0, chars.length(), r);
-        return new Digits(Math.max(0, -r.top) / SIZE, Math.min(0, -r.bottom) / SIZE,
-                p.measureText(chars) / chars.length() / SIZE);
+        float maxAdv = 0f;
+        int count = Math.min(10, chars.length());
+        for (int i = 0; i < count; i++) {
+            maxAdv = Math.max(maxAdv, p.measureText(chars, i, i + 1));
+        }
+        float adv = maxAdv > 0f ? maxAdv / SIZE : p.measureText(chars) / chars.length() / SIZE;
+        return new Digits(Math.max(0, -r.top) / SIZE, Math.min(0, -r.bottom) / SIZE, adv);
     }
 
     /** Include clock punctuation and both ends of the adjustable weight axis in the safe bounds. */
